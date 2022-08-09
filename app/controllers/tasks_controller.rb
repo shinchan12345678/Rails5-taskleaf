@@ -1,9 +1,14 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
- 
+
+  def import
+    current_user.tasks.import(params[:file])
+    redirect_to tasks_path, notice: "タスクを追加しました"
+  end
+
   def index
     @q = current_user.tasks.ransack(params[:q])
-    @tasks = @q.result(distict: true)
+    @tasks = @q.result(distict: true).page(params[:page])
 
     respond_to do |format|
       format.html
