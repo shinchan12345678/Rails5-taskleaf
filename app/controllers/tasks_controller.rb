@@ -37,6 +37,7 @@ class TasksController < ApplicationController
     end
 
     if @task.save
+      logger.debug "task #{@task.attributes.inspect}"
       redirect_to task_path(@task), notice: "タスク「#{@task.name}」を登録しました"
     else
       render :new
@@ -55,6 +56,10 @@ class TasksController < ApplicationController
     @task.destroy
     # redirect_to tasks_path, notice: "タスク「#{task.name}」を削除しました。"
     head :no_content
+  end
+
+  def task_logger
+    @task_logger ||= Logger.new('log/task.log', 'daily')
   end
 
   private
